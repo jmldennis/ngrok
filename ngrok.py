@@ -9,30 +9,38 @@ class ngrok():
     def __init__(self,protocol="http",port="5000"):
         bashCmd = ["ngrok",protocol,port]
         process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
+        self.first_run = True
     
     #Get NGROK urls from localhost api
     def get_ngrok_urls(self):
         self.urls = []
         self.ngrok_console = 'http://127.0.0.1:4040/api/tunnels'
-        tunnels = requests.get(self.ngrok_console).json()['tunnels']
-        for tunnel in tunnels:
-            self.urls.append(tunnel['public_url'])
+        print("Getting tunnels urls",end="",flush=True)
+        done = False
+        
+        #Wait for 2 urls http and https if running immediately
+        while not done:
+            try:
+                tunnels = requests.get(self.ngrok_console).json()['tunnels']
+                for tunnel in tunnels:
+                    self.urls.append(tunnel['public_url'])
+                if len(self.urls) >= 2: 
+                    print(".Done!")
+                    done = True
+                else:
+                    print(".",end="",flush=True)
+                    sleep(1)
+            except Exception:
+                sleep(1)
+            
         return self.urls
 
 #Simple test app
 if __name__ == '__main__':
-    print("Starting NGROK",end="",flush=True)
+    print("Starting NGROK")
     n = ngrok()
-    done = False
-    #Wait for 2 urls http and https
-    while not done:
-        sleep(1)
-        urls = n.get_ngrok_urls()
-        if len(urls) == 2: 
-            print(".Done!")
-            done = True
-        else:
-            print(".",end="",flush=True)
+    urls = n.get_ngrok_urls()
+       
     #Print URLs to screen
     for url in urls:
         print(url)
