@@ -6,13 +6,14 @@ from time import sleep
 
 class ngrok():
     #Execute NGROK from bash "ngrok http 5000"
-    def __init__(self,protocol="http",port="5000"):
+    def __init__(self,protocol="http",port="5000",region="us"):
         self.protocol = protocol
         self.port = port
+        self.region = region
         self.ngrok_console = 'http://127.0.0.1:4040/api/tunnels'
 
     def start_ngrok(self):
-        bashCmd = ["ngrok",self.protocol,self.port]
+        bashCmd = ["ngrok",self.protocol,self.port,f"--region={self.region}"]
         process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
     
     #Get NGROK urls from localhost api
