@@ -18,17 +18,17 @@ class ngrok():
     
     #Get NGROK urls from localhost api
     def get_ngrok_urls(self):
-        self.urls = []
         print("Getting tunnel urls",end="",flush=True)
         done = False
         
         #Wait for 2 urls http and https if running immediately after starting ngrok
         while not done:
             try:
+                self.urls = []
                 tunnels = requests.get(self.ngrok_console).json()['tunnels']
                 for tunnel in tunnels:
                     self.urls.append(tunnel['public_url'])
-                if len(self.urls) >= 2: 
+                if len(self.urls) == 2: 
                     print(".Done!")
                     done = True
                 else:
