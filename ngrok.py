@@ -41,8 +41,8 @@ class ngrok():
 
     def kill_ngrok(self):
         #Issuing this command 
-        #kill $(ps | grep '[n]grok http 5000' | awk '{print $1}')
-        bashCmd = f"kill $(ps | grep '[n]grok {self.protocol} {self.port}' | awk "+"'{print $1}')"
+        #kill $(ps aux | grep '[n]grok http 5000' | awk '{print $2}')
+        bashCmd = f"kill $(ps aux | grep '[n]grok {self.protocol} {self.port}' | awk "+"'{print $2}')"
         process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE, shell=True)
       
         print("Kill NGROK",end="",flush=True)
@@ -68,3 +68,15 @@ if __name__ == '__main__':
     #Print URLs to screen
     for url in urls:
         print(url)
+
+    sleep(5)
+    n.kill_ngrok()
+    sleep(5)
+    n.start_ngrok()
+    urls = n.get_ngrok_urls()
+
+    #Print URLs to screen
+    for url in urls:
+        print(url)
+    sleep(5)
+    n.kill_ngrok()
