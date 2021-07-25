@@ -11,12 +11,15 @@ class ngrok():
         self.port = port
         self.region = region
         self.ngrok_console = 'http://127.0.0.1:4040/api/tunnels'
+        self.url = {}
 
     def start_ngrok(self):
         bashCmd = ["ngrok",self.protocol,self.port,f"--region={self.region}"]
         process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
     
     #Get NGROK urls from localhost api
+    #url is a dictionary with the urls assigned by type ex. http or https
+    #urls is a list of urls
     def get_ngrok_urls(self):
         print("Getting tunnel urls",end="",flush=True)
         done = False
@@ -36,6 +39,12 @@ class ngrok():
                     sleep(1)
             except Exception:
                 sleep(1)
+
+        for item in self.urls:
+            if "https" in item:
+                self.url["https"] = item
+            elif "http" in item:
+                self.url["http"] = item
             
         return self.urls
 
@@ -66,8 +75,8 @@ if __name__ == '__main__':
     urls = n.get_ngrok_urls()
 
     #Print URLs to screen
-    for url in urls:
-        print(url)
+    print(n.url["https"])
+    print(n.url["http"])
 
     sleep(5)
     n.kill_ngrok()
