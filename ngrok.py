@@ -14,7 +14,7 @@ class ngrok():
         self.url = {}
 
     def start_ngrok(self):
-        bashCmd = ["ngrok",self.protocol,self.port,f"--region={self.region}"]
+        bashCmd = ["ngrok",self.protocol,self.port,"--region="+self.region]
         process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE)
     
     #Get NGROK urls from localhost api
@@ -51,7 +51,7 @@ class ngrok():
     def kill_ngrok(self):
         #Issuing this command 
         #kill $(ps aux | grep '[n]grok http 5000' | awk '{print $2}')
-        bashCmd = f"kill $(ps aux | grep '[n]grok {self.protocol} {self.port}' | awk "+"'{print $2}')"
+        bashCmd = "kill $(ps aux | grep '[n]grok "+self.protocol+ " "+str(self.port)+"' | awk "+"'{print $2}')"
         process = subprocess.Popen(bashCmd, stdout=subprocess.PIPE, shell=True)
       
         print("Kill NGROK",end="",flush=True)
